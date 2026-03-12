@@ -1,7 +1,7 @@
 export const diagrams = {
     'upgrade-django4-problem-overview': `
         graph LR
-        Resume[Resume Upgrade Django4 Section] --> SelectOne[Select One Issue]
+        Resume[Resume Django Commerce Section] --> SelectOne[Select One Issue]
         SelectOne --> Trace[Trace Code Path]
         Trace --> AuthFlow[Auth Security Flow]
         Trace --> CartFlow[Cart Merge Flow]
@@ -29,7 +29,7 @@ export const diagrams = {
 
     'upgrade-django4-code-evidence-map': `
         graph TB
-        Root[Upgrade Django4 Code Evidence]
+        Root[Django Commerce Code Evidence]
         Root --> Auth[Auth and Security]
         Root --> Commerce[Commerce Core]
         Root --> Review[Review and Search UX]

@@ -2,17 +2,17 @@ import { diagrams } from './diagrams.js';
 
 export const templateConfig = {
     system: {
-        documentTitle: 'Yohan | Upgrade Django4 Problem Solving Portfolio',
-        systemName: 'UPGRADE_DJANGO4_PROBLEM_SOLVING_V.1.0'
+        documentTitle: 'Yohan | Django Commerce Problem Solving Portfolio',
+        systemName: 'DJANGO_COMMERCE_PROBLEM_SOLVING_V.1.0'
     },
 
     hero: {
         sectionId: 'upgrade-django4-problem-solving',
-        panelTitle: 'UPGRADE_DJANGO4_PROBLEM_SOLVING_OVERVIEW',
-        panelUid: 'ID: UPGRADE-DJ4-PS-00',
+        panelTitle: 'DJANGO_COMMERCE_PROBLEM_SOLVING_OVERVIEW',
+        panelUid: 'ID: DJANGO-COMMERCE-PS-00',
         diagramId: 'upgrade-django4-problem-overview',
         metrics: [
-            '이력서 쇼핑몰(Upgrade_Django4) 항목을 코드 단위로 추적해 문제-원인-해결-결과 흐름으로 재구성했습니다.',
+            'Django Commerce 프로젝트를 코드 단위로 추적해 문제-원인-해결-결과 흐름으로 재구성했습니다.',
             '핵심 근거는 accounts/views.py, carts/views.py, orders/views.py, store/views.py, greatkart/settings.py, .ebextensions 설정 파일입니다.',
             'README의 핵심 문제 해결 경험(AWS 마이그레이션, 인증 보안, 커머스 로직)과 실제 구현 코드 경로를 직접 매핑했습니다.',
             '각 케이스 상단 다이어그램은 before/after 또는 실행 플로우 중심으로 설계해 문맥 없이도 이해되도록 구성했습니다.'
@@ -23,7 +23,7 @@ export const templateConfig = {
         {
             sectionId: 'upgrade-django4-code-evidence',
             panelTitle: 'CODE_EVIDENCE_MAP',
-            panelUid: 'ID: UPGRADE-DJ4-PS-01',
+            panelUid: 'ID: DJANGO-COMMERCE-PS-01',
             diagramId: 'upgrade-django4-code-evidence-map',
             navLabel: 'CODE_EVIDENCE',
             metrics: [
@@ -36,7 +36,7 @@ export const templateConfig = {
     ],
 
     navigation: [
-        { label: 'UPGRADE_DJANGO4_PROBLEM_SOLVING_OVERVIEW', target: '#upgrade-django4-problem-solving' },
+        { label: 'DJANGO_COMMERCE_PROBLEM_SOLVING_OVERVIEW', target: '#upgrade-django4-problem-solving' },
         { label: 'CASES', target: '#upgrade-django4-cases' },
         { label: 'CODE_EVIDENCE', target: '#upgrade-django4-code-evidence' },
         { label: 'SKILL_SET', target: '#upgrade-django4-skill-set' },
@@ -46,7 +46,7 @@ export const templateConfig = {
     skills: {
         sectionId: 'upgrade-django4-skill-set',
         panelTitle: 'SKILL_SET',
-        panelUid: 'ID: UPGRADE-DJ4-STACK',
+        panelUid: 'ID: DJANGO-COMMERCE-STACK',
         items: [
             { title: 'DJANGO CORE', stack: 'Python 3.11, Django 4.2, MVT, Custom User Model' },
             { title: 'COMMERCE', stack: 'Cart Merge, Order Flow, Payment Integration, Stock Update' },
@@ -60,7 +60,7 @@ export const templateConfig = {
     serviceSections: [
         {
             id: 'upgrade-django4-cases',
-            title: 'UPGRADE_DJANGO4_TROUBLESHOOTING_CASES',
+            title: 'DJANGO_COMMERCE_TROUBLESHOOTING_CASES',
             navLabel: 'CASES',
             theme: 'blue',
             cardVisualHeight: '290px',
@@ -243,8 +243,8 @@ export const templateConfig = {
     contact: {
         sectionId: 'contact',
         panelTitle: 'CONTACT',
-        panelUid: 'ID: UPGRADE-DJ4-COMMS',
-        description: 'Upgrade_Django4 포트폴리오 관련 문의는 아래 채널로 부탁드립니다.',
+        panelUid: 'ID: DJANGO-COMMERCE-COMMS',
+        description: 'Django Commerce 포트폴리오 관련 문의는 아래 채널로 부탁드립니다.',
         actions: [
             { label: 'EMAIL', href: 'mailto:yohan032yohan@gmail.com' },
             { label: 'GITHUB', href: 'https://github.com/ramyo564/Upgrade_Django4' },
