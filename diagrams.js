@@ -56,17 +56,17 @@ export const diagrams = {
     `,
 
     'case-auth-security-hardening': `
-        graph TB
-        Signup[User Signup Request] --> Inactive[Create Account Inactive]
-        Inactive --> TokenLink[Build uid and token link]
-        TokenLink --> SendMail[Send Verification Email]
-        SendMail --> ActivateReq[Activation URL Request]
-        ActivateReq --> TokenCheck{Token Valid}
-        TokenCheck -- Yes --> ActiveOn[Set is_active true]
-        TokenCheck -- No --> RejectLink[Reject Invalid Link]
+        graph LR
+        Signup[Signup Request] --> Inactive[Create Inactive]
+        Inactive --> TokenLink[uid/token link]
+        TokenLink --> SendMail[Send Email]
+        SendMail --> ActivateReq[Activation Req]
+        ActivateReq --> TokenCheck{Valid?}
+        TokenCheck -->|Yes| ActiveOn[Set is_active=true]
+        TokenCheck -->|No| RejectLink[Reject Invalid]
 
-        AdminTry[Attack Tries Admin Route] --> Honeypot[admin honeypot path]
-        RealAdmin[Real Admin Login] --> SecurePath[securelogin path]
+        AdminTry[Attack /admin] -.-> Honeypot[admin_honeypot]
+        RealAdmin[Real Admin Login] -.-> SecurePath[securelogin]
 
         classDef b fill:#161b22,stroke:#58a6ff,color:#c9d1d9
         classDef o fill:#161b22,stroke:#d29922,color:#c9d1d9

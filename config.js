@@ -62,6 +62,66 @@ export const templateConfig = {
             id: 'upgrade-django4-cases',
             title: 'DJANGO_COMMERCE_TROUBLESHOOTING_CASES',
             navLabel: 'CASES',
+            sectionLead: '대표 3건을 먼저 보고, 필요할 때 전체 Case 1~6을 확장해 깊게 읽을 수 있도록 구성했습니다.',
+            recruiterBrief: {
+                kicker: 'RECRUITER_QUICK_BRIEF',
+                title: '1분 요약으로 먼저 보는 핵심 변화',
+                cases: [
+                    {
+                        id: 'Case 1',
+                        anchorId: 'upgrade-django4-case-1',
+                        title: '메일 인증 + 허니팟 보안 강화',
+                        problem: '이메일 검증 없는 유령 계정 및 기본 /admin 경로 무차별 공격 노출',
+                        action: '토큰 기반 비활성 계정 활성화 및 관리자 honeypot 라우팅 적용',
+                        impact: '가입 계정 신뢰도 보장 및 관리자 공격 표면 최소화'
+                    },
+                    {
+                        id: 'Case 2',
+                        anchorId: 'upgrade-django4-case-2',
+                        title: '세션 장바구니 로그인 병합',
+                        problem: '비회원 상태의 장바구니 품목이 로그인 시 단절 및 중복 발생',
+                        action: 'variation 단위 비교 병합 및 익명/회원 상태 제어 동기화',
+                        impact: '로그인 전후 쇼핑 흐름 유지 및 주문 정보 일관성 회복'
+                    },
+                    {
+                        id: 'Case 3',
+                        anchorId: 'upgrade-django4-case-3',
+                        title: '결제 수단 후처리 통합',
+                        problem: 'PayPal/Kakao 채널별로 결제 전이 및 재고 차감 로직이 분산되어 누락 발생',
+                        action: '주문 확정 후 장바구니 비우기 및 상태 전이를 공통 단계로 통일',
+                        impact: '결제 채널 확장 시 유지보수 용이 및 상태 불일치 리스크 제거'
+                    },
+                    {
+                        id: 'Case 4',
+                        anchorId: 'upgrade-django4-case-4',
+                        title: '리뷰 권한과 점수 집계 모델화',
+                        problem: '무작위 후기 및 평점 집계 분리로 사용자 노출 화면 데이터 왜곡',
+                        action: '구매자/로그인 상태 기반 작성 차단 및 Product 모델 집계 쿼리 단일화',
+                        impact: '상품 평점의 신뢰도 상승 및 뷰 컨트롤러 연산 부담 감소'
+                    },
+                    {
+                        id: 'Case 5',
+                        anchorId: 'upgrade-django4-case-5',
+                        title: '목록 검색/정렬/필터 고도화',
+                        problem: '단일 상품 목록의 탐색 피로도 및 정렬 null 값 처리 부재로 혼란 가중',
+                        action: '키워드/카테고리 복합 검색 유지 및 평점 정렬 Case/When 처리',
+                        impact: '복합 필터에서도 데이터 유지 달성 및 페이징 성능 개선'
+                    },
+                    {
+                        id: 'Case 6',
+                        anchorId: 'upgrade-django4-case-6',
+                        title: 'PostgreSQL 이관 및 AWS 배포',
+                        problem: '로컬/운영 DB 차이 및 수동 환경 구성에 따른 서비스/배포 불안정',
+                        action: 'RDS 분기 환경변수, dumpdata 데이터 이전, EB 배포 명령 고정',
+                        impact: '클라우드 환경 런타임 표준화 및 마이그레이션 자동화 루틴 정립'
+                    }
+                ]
+            },
+            featuredCaseAnchors: ['upgrade-django4-case-2', 'upgrade-django4-case-3', 'upgrade-django4-case-6'],
+            featuredCaseCount: 3,
+            featuredStateLabel: '대표 3건 우선 노출',
+            featuredToggleLabel: '전체 Case 1~6 보기',
+            featuredCollapseLabel: '대표 Case 3건만 보기',
             theme: 'blue',
             cardVisualHeight: '290px',
             cardClass: 'problem-case-card',
@@ -76,6 +136,7 @@ export const templateConfig = {
                             title: 'Case 1. 이메일 인증 + 허니팟으로 인증 보안 강화',
                             subtitle: '2023-05 · accounts + greatkart URL/Settings 경로 정리',
                             overview: '회원가입 계정 신뢰도와 관리자 경로 공격 방어를\n동시에 처리하기 위해 인증/관리자 진입 경계를 분리한 케이스입니다.',
+                            businessImpact: '유령 계정 방어로 CRM 데이터 신뢰도 확보 및 백도어 공격 표면 축소',
                             role: '회원가입 활성화 플로우 구현, 관리자 honeypot 경로 분리, 보안 설정 통합',
                             stackSummary: 'Django auth token, EmailMessage, admin_honeypot, URL routing',
                             problem: '1) 이메일 소유 검증 없이 가입을 허용하면 유령 계정이 생성될 수 있습니다.\n2) 기본 `/admin` 노출 상태는 무차별 로그인 시도의 표적이 됩니다.\n3) 계정 신뢰도와 관리자 접근 보안이 함께 약해지는 구조였습니다.',
@@ -101,6 +162,7 @@ export const templateConfig = {
                             title: 'Case 2. 로그인 시 세션 장바구니 병합으로 상태 일관성 확보',
                             subtitle: '2023-05 · carts + accounts login merge flow',
                             overview: '비회원 장바구니가 로그인 이후 사라지거나 중복되는 문제를\nvariation 단위 병합 규칙으로 제어한 케이스입니다.',
+                            businessImpact: '장바구니 세션 보존으로 비회원의 회원가입 전환 시 결제 손실률 방어',
                             role: '세션 cart_id 설계, 로그인 병합 로직 구현, variation 중복 처리 정리',
                             stackSummary: 'Session cart_id, CartItem variations, login merge logic',
                             problem: '1) 비회원이 담은 품목이 로그인 후 계정 장바구니와 단절될 수 있었습니다.\n2) 동일 옵션 품목이 중복 라인으로 남아 수량/가격 정합성이 깨질 수 있었습니다.\n3) 익명 상태와 회원 상태의 데이터 기준이 달라 UX 단절이 발생했습니다.',
@@ -126,6 +188,7 @@ export const templateConfig = {
                             title: 'Case 3. PayPal/Kakao 결제 후처리 공통화로 주문 상태 표준화',
                             subtitle: '2023-05 ~ 2023-06 · orders workflow integration',
                             overview: 'SDK 기반 PayPal과 REST 기반 KakaoPay의 결제 완료 경로를\n동일한 주문 확정 단계로 맞춰 상태 전이를 표준화한 케이스입니다.',
+                            businessImpact: '결제 채널 후처리 통합으로 장애 대응 시간 단축 및 결제 데이터 무결성 보장',
                             role: '주문 생성 및 결제 후처리 구현, 결제 경로 간 공통 단계 정리, 재고/장바구니 반영',
                             stackSummary: 'OrderForm, Payment model, OrderProduct, PayPal SDK, KakaoPay REST',
                             problem: '1) 결제 수단별로 후처리 로직이 분산되면 주문 상태가 경로마다 달라질 위험이 있습니다.\n2) 결제 성공 직후 재고 차감/장바구니 삭제/주문상품 생성이 누락되면 데이터 정합성이 깨집니다.\n3) 결제 수단 증가 시 유지보수 비용이 빠르게 상승합니다.',
@@ -157,6 +220,7 @@ export const templateConfig = {
                             title: 'Case 4. 리뷰 작성 권한과 평점 집계 경로를 분리해 신뢰도 확보',
                             subtitle: '2023-05 · store review permission and aggregation',
                             overview: '리뷰 데이터 신뢰도를 위해 작성 권한과 집계 경로를 분리하고\n상품 상세에서 노출 조건을 명확히 정리한 케이스입니다.',
+                            businessImpact: '구매자 한정 리뷰 모델링으로 허위 평점 차단 및 상품 신뢰도 상승',
                             role: '리뷰 권한 조건 정리, 등록/수정 흐름 구현, 평균/개수 집계 메서드 연결',
                             stackSummary: 'ReviewRating, OrderProduct check, Product.averageReview, Product.countReview',
                             problem: '1) 비로그인/미구매 사용자 리뷰를 허용하면 평점 신뢰도가 낮아질 수 있습니다.\n2) 리뷰 등록과 평점 집계가 분리되면 화면 지표와 실제 데이터가 어긋날 수 있습니다.\n3) 동일 사용자의 중복 리뷰가 누적되면 지표 왜곡이 발생합니다.',
@@ -182,6 +246,7 @@ export const templateConfig = {
                             title: 'Case 5. 검색/정렬/필터/페이지네이션 조합으로 탐색 UX 고도화',
                             subtitle: '2023-05 · store list query and rendering flow',
                             overview: '상품 탐색 과정에서 검색/정렬/필터/페이지 단위를 조합해\n사용자가 원하는 상품군에 빠르게 도달하도록 구성한 케이스입니다.',
+                            businessImpact: '복합 검색 기능 유지로 원하는 상품 도달률 향상 및 카탈로그 탐색 편의성 증대',
                             role: '조회 조건 설계, 평균 평점 정렬 예외 처리, 카테고리/옵션 상태 유지 구현',
                             stackSummary: 'store/update_results/search, Paginator, Avg/Case/When annotation',
                             problem: '1) 상품 개수가 늘어날수록 단일 목록 출력은 탐색 피로를 높입니다.\n2) 카테고리/옵션/정렬을 함께 사용할 때 상태가 끊기면 결과 예측이 어렵습니다.\n3) 리뷰 없는 상품 정렬 시 null 처리 부재는 UX 혼란을 유발할 수 있습니다.',
@@ -213,6 +278,7 @@ export const templateConfig = {
                             title: 'Case 6. SQLite에서 PostgreSQL로 데이터 마이그레이션 및 AWS 배포 안정화',
                             subtitle: '2023-05 ~ 2023-06 · AWS migration and runtime settings',
                             overview: '로컬 SQLite 기반 개발 데이터를 AWS PostgreSQL 운영 환경으로 이전하고\nEB 런타임 설정을 통해 배포 동작을 고정한 케이스입니다.',
+                            businessImpact: 'AWS 클라우드 인프라 표준화 및 마이그레이션 성공으로 트래픽 확장 기반 마련',
                             role: '환경별 DB 설정 분기, AWS 배포 설정 정리, 마이그레이션 절차 문서화',
                             stackSummary: 'Django settings DATABASES, Elastic Beanstalk, RDS PostgreSQL, VPC, .ebextensions',
                             problem: '1) 로컬 SQLite와 운영 PostgreSQL 간 스키마/데이터 환경 차이가 존재했습니다.\n2) 배포 시 migration 누락 또는 WSGI/static 설정 불일치가 서비스 장애로 이어질 수 있었습니다.\n3) 앱-DB 통신 경계가 외부에 노출되면 운영 보안 리스크가 커집니다.',
