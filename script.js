@@ -408,6 +408,13 @@ function setupUptime() {
   setInterval(updateUptime, 1000);
 }
 
+function syncModalBodyLock() {
+  const hasOpenModal = Boolean(
+    document.querySelector(".mermaid-modal.is-open, .extra-evidence-modal.is-open, .k6-overview-modal.is-open")
+  );
+  document.body.classList.toggle("modal-open", hasOpenModal);
+}
+
 function setupMobileNav() {
   const nav = byId("header-nav");
   const toggle = document.querySelector(".nav-toggle");
@@ -964,20 +971,13 @@ function createSectionRecruiterBrief(sectionConfig) {
         }
         const row = document.createElement("p");
         row.className = "section-recruiter-card-row";
-        row.style.marginBottom = "0.4rem";
 
         const label = document.createElement("span");
         label.className = "section-recruiter-card-key";
-        label.style.display = "block";
-        label.style.fontWeight = "bold";
-        label.style.color = "var(--accent-orange)";
-        label.style.fontSize = "0.65rem";
         label.textContent = labelText;
 
         const value = document.createElement("span");
         value.className = "section-recruiter-card-value";
-        value.style.fontSize = "0.78rem";
-        value.style.color = "var(--text-secondary)";
         value.textContent = valueText;
 
         row.append(label, value);
