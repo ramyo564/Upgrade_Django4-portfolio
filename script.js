@@ -331,14 +331,14 @@ function rerenderVisibleCardDiagrams(entries, options = {}) {
   const force = Boolean(options?.force);
   const candidates = Array.isArray(entries)
     ? entries
-        .map((entry) =>
-          entry?.element instanceof HTMLElement ? entry.element : null,
-        )
-        .filter(Boolean)
-        .filter((element) => !element.hidden)
-        .map((element) => element.querySelector(".mermaid"))
-        .filter((node) => node instanceof HTMLElement)
-        .filter((node) => force || !node.querySelector("svg"))
+      .map((entry) =>
+        entry?.element instanceof HTMLElement ? entry.element : null,
+      )
+      .filter(Boolean)
+      .filter((element) => !element.hidden)
+      .map((element) => element.querySelector(".mermaid"))
+      .filter((node) => node instanceof HTMLElement)
+      .filter((node) => force || !node.querySelector("svg"))
     : [];
 
   if (candidates.length === 0) {
@@ -851,18 +851,18 @@ function createSectionRecruiterBrief(sectionConfig) {
 
   const quickCases = Array.isArray(brief.cases)
     ? brief.cases
-        .map((item) => ({
-          id: String(item?.id || "").trim(),
-          anchorId: String(item?.anchorId || "").trim(),
-          title: String(item?.title || "").trim(),
-          problem: String(item?.problem || "").trim(),
-          action: String(item?.action || "").trim(),
-          impact: String(item?.impact || "").trim(),
-        }))
-        .filter(
-          (item) =>
-            item.id || item.title || item.problem || item.action || item.impact,
-        )
+      .map((item) => ({
+        id: String(item?.id || "").trim(),
+        anchorId: String(item?.anchorId || "").trim(),
+        title: String(item?.title || "").trim(),
+        problem: String(item?.problem || "").trim(),
+        action: String(item?.action || "").trim(),
+        impact: String(item?.impact || "").trim(),
+      }))
+      .filter(
+        (item) =>
+          item.id || item.title || item.problem || item.action || item.impact,
+      )
     : [];
 
   const bullets = Array.isArray(brief.bullets)
@@ -892,6 +892,39 @@ function createSectionRecruiterBrief(sectionConfig) {
     wrapper.appendChild(title);
   }
 
+  const actions = document.createElement("div");
+  actions.className = "section-recruiter-actions";
+
+  // [추가] 전역 actions 버튼 렌더링
+  if (Array.isArray(brief.actions)) {
+    brief.actions.forEach((actionItem) => {
+      const btn = document.createElement("a");
+      btn.className = `hero-action-btn variant-${actionItem.variant || "secondary"}`;
+      btn.href = actionItem.href || "#";
+      btn.textContent = actionItem.label || "ACTION";
+      if (!String(actionItem.href || "").startsWith("#")) {
+        btn.target = "_blank";
+        btn.rel = "noopener noreferrer";
+      }
+
+      btn.addEventListener("click", () => {
+        trackSelectContent({
+          contentType: "recruiter_brief_global_action",
+          itemId: actionItem.label || "unknown_action",
+          itemName: actionItem.label || "ACTION",
+          sectionName: "recruiter_brief",
+          interactionAction: "click",
+          elementType: "button",
+          elementLabel: actionItem.label,
+          linkUrl: actionItem.href,
+        });
+      });
+      actions.appendChild(btn);
+    });
+  }
+
+  wrapper.appendChild(actions);
+
   if (quickCases.length > 0) {
     const cardGrid = document.createElement("div");
     cardGrid.className = "section-recruiter-card-grid";
@@ -900,27 +933,12 @@ function createSectionRecruiterBrief(sectionConfig) {
       const card = document.createElement("article");
       card.className = "section-recruiter-card";
       if (item.anchorId) {
-        card.setAttribute("data-anchor-id", item.anchorId);
-        card.addEventListener("click", () => {
-          const targetId = item.anchorId.replace(/^#/, "");
-          ensureCaseCardVisible(targetId);
-          const targetEl = document.getElementById(targetId);
-          if (targetEl) {
-            targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
-            history.pushState(null, "", `#${targetId}`);
-          }
-          trackSelectContent({
-            contentType: "recruiter_quick_brief_card",
-            itemId: item.id || "unknown_case",
-            itemName: item.title || "unknown_case",
-            sectionName: "recruiter_quick_brief",
-            interactionAction: "click_card",
-            elementType: "article",
-            elementLabel: item.id || "unknown_case",
-            linkUrl: `#${targetId}`,
-          });
-        });
+        card.id = `brief-${item.anchorId.replace(/^#/, "")}`;
       }
+
+      const header = document.createElement("div");
+      header.className = "section-recruiter-card-header";
+      header.style.cursor = "pointer";
 
       const idLine = document.createElement("p");
       idLine.className = "section-recruiter-card-id";
@@ -930,19 +948,36 @@ function createSectionRecruiterBrief(sectionConfig) {
       cardTitle.className = "section-recruiter-card-title";
       cardTitle.textContent = item.title || "핵심 변화";
 
+      header.append(idLine, cardTitle);
+
+      const toggleHint = document.createElement("div");
+      toggleHint.className = "section-recruiter-card-toggle-hint";
+      toggleHint.textContent = "DETAILS";
+      header.appendChild(toggleHint);
+
+      const details = document.createElement("div");
+      details.className = "section-recruiter-card-details";
+
       const createRow = (labelText, valueText) => {
         if (!valueText) {
           return null;
         }
         const row = document.createElement("p");
         row.className = "section-recruiter-card-row";
+        row.style.marginBottom = "0.4rem";
 
         const label = document.createElement("span");
         label.className = "section-recruiter-card-key";
-        label.textContent = `${labelText}:`;
+        label.style.display = "block";
+        label.style.fontWeight = "bold";
+        label.style.color = "var(--accent-orange)";
+        label.style.fontSize = "0.65rem";
+        label.textContent = labelText;
 
         const value = document.createElement("span");
         value.className = "section-recruiter-card-value";
+        value.style.fontSize = "0.78rem";
+        value.style.color = "var(--text-secondary)";
         value.textContent = valueText;
 
         row.append(label, value);
@@ -953,16 +988,65 @@ function createSectionRecruiterBrief(sectionConfig) {
       const actionRow = createRow("ACTION", item.action);
       const impactRow = createRow("IMPACT", item.impact);
 
-      card.append(idLine, cardTitle);
-      if (problemRow) {
-        card.appendChild(problemRow);
+      if (problemRow) details.appendChild(problemRow);
+      if (actionRow) details.appendChild(actionRow);
+      if (impactRow) details.appendChild(impactRow);
+
+      // [추가] links 필드가 있으면 버튼으로 렌더링
+      if (Array.isArray(item.links)) {
+        item.links.forEach((linkInfo) => {
+          if (linkInfo.href) {
+            const btn = document.createElement("a");
+            btn.className = "card-extra-btn";
+            btn.href = linkInfo.href;
+            btn.target = "_blank";
+            btn.rel = "noopener noreferrer";
+            btn.textContent = linkInfo.label || "GO TO PAGE";
+            // GTM 추적 추가
+            btn.addEventListener("click", () => {
+              trackSelectContent({
+                contentType: "recruiter_brief_link",
+                itemId: item.id || "brief_case",
+                itemName: item.title || "Brief Case",
+                sectionName: "recruiter_brief",
+                interactionAction: "open_link",
+                elementType: "link",
+                elementLabel: linkInfo.label || "LINK",
+                linkUrl: linkInfo.href,
+              });
+            });
+            details.appendChild(btn);
+          }
+        });
       }
-      if (actionRow) {
-        card.appendChild(actionRow);
+
+      if (item.anchorId) {
+        const gotoBtn = document.createElement("button");
+        gotoBtn.className = "card-extra-btn";
+        gotoBtn.textContent = "GO_TO_FULL_PROBLEM_SOLVING";
+        gotoBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const targetId = item.anchorId.replace(/^#/, "");
+          revealHashTarget(targetId, "recruiter_card_goto");
+        });
+        details.appendChild(gotoBtn);
       }
-      if (impactRow) {
-        card.appendChild(impactRow);
-      }
+
+      card.append(header, details);
+
+      card.addEventListener("click", () => {
+        const isExpanded = card.classList.toggle("is-expanded");
+        trackSelectContent({
+          contentType: "recruiter_quick_brief_card",
+          itemId: item.id || "unknown_case",
+          itemName: item.title || "unknown_case",
+          sectionName: "recruiter_quick_brief",
+          interactionAction: isExpanded ? "expand" : "collapse",
+          elementType: "article",
+          elementLabel: item.id || "unknown_case",
+        });
+      });
+
       cardGrid.appendChild(card);
     });
 
@@ -979,10 +1063,6 @@ function createSectionRecruiterBrief(sectionConfig) {
     });
     wrapper.appendChild(list);
   }
-
-  const actions = document.createElement("div");
-  actions.className = "section-recruiter-actions";
-  wrapper.appendChild(actions);
 
   return wrapper;
 }
@@ -1072,8 +1152,8 @@ function renderServiceSections() {
       sectionConfig.featuredCaseAnchors,
     )
       ? sectionConfig.featuredCaseAnchors
-          .map((anchorId) => String(anchorId || "").trim())
-          .filter(Boolean)
+        .map((anchorId) => String(anchorId || "").trim())
+        .filter(Boolean)
       : [];
     const featuredCountCandidate = Number.parseInt(
       sectionConfig.featuredCaseCount,
@@ -1097,8 +1177,8 @@ function renderServiceSections() {
     const allAnchorSet = new Set(
       renderedCards.map((entry) => entry.anchorId).filter(Boolean),
     );
-    const canCollapse =
-      featuredSet.size > 0 && featuredSet.size < renderedCards.length;
+    // [수정] 토글 기능을 비활성화하여 항상 전체 노출되도록 함
+    const canCollapse = false;
 
     if (canCollapse) {
       const controls = document.createElement("div");
@@ -1106,15 +1186,15 @@ function renderServiceSections() {
 
       const stateLabel = String(
         sectionConfig.featuredStateLabel ||
-          `대표 ${featuredSet.size}건 우선 노출`,
+        `대표 ${featuredSet.size}건 우선 노출`,
       ).trim();
       const expandLabel = String(
         sectionConfig.featuredToggleLabel ||
-          `전체 Case ${renderedCards.length}건 보기`,
+        `전체 Case ${renderedCards.length}건 보기`,
       ).trim();
       const collapseLabel = String(
         sectionConfig.featuredCollapseLabel ||
-          `대표 Case ${featuredSet.size}건만 보기`,
+        `대표 Case ${featuredSet.size}건만 보기`,
       ).trim();
 
       const state = document.createElement("span");
@@ -1261,28 +1341,48 @@ function ensureCaseCardVisible(targetId) {
       revealed = true;
     }
   });
-  if (revealed) {
-    const target = document.getElementById(anchorId);
-    if (target) {
-      void target.offsetWidth; // trigger reflow
-      target.classList.add("target-highlight");
-      setTimeout(() => target.classList.remove("target-highlight"), 1200);
-
-      const showcaseId = target.closest(".service-section")?.id || "";
-      trackSelectContent({
-        contentType: "case_showcase_reveal",
-        itemId: anchorId,
-        itemName:
-          target.querySelector(".card-title")?.textContent?.trim() || anchorId,
-        sectionName: "service_section",
-        interactionAction: "reveal_target",
-        elementType: "article",
-        elementLabel: "CASE_REVEALED",
-        showcase_id: showcaseId,
-      });
-    }
-  }
   return revealed;
+}
+
+function revealHashTarget(hashValue, triggerSource = "hash_navigation") {
+  const targetId = String(hashValue || "").replace(/^#/, "").trim();
+  if (!targetId) {
+    return;
+  }
+
+  ensureCaseCardVisible(targetId);
+
+  window.setTimeout(() => {
+    const target = byId(targetId) || byId(`brief-${targetId}`);
+    if (!target) {
+      return;
+    }
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    target.classList.remove("is-target-highlight");
+    void target.offsetWidth; // trigger reflow
+    target.classList.add("is-target-highlight");
+
+    // Also check if it's a recruiter card to expand it
+    if (target.classList.contains("section-recruiter-card")) {
+      target.classList.add("is-expanded");
+    }
+
+    const showcaseId = target.closest(".service-section")?.id || "";
+    trackSelectContent({
+      contentType: "hash_target_reveal",
+      itemId: targetId,
+      itemName:
+        target.querySelector(".card-title, .section-recruiter-card-title")
+          ?.textContent?.trim() || targetId,
+      sectionName: "service_section",
+      interactionAction: "reveal_target",
+      elementType: "section",
+      elementLabel: "HASH_TARGET_REVEAL",
+      trigger_source: triggerSource,
+      showcase_id: showcaseId,
+    });
+  }, 100);
 }
 
 function renderContact() {
@@ -1426,7 +1526,7 @@ function renderNavigation() {
 
   const configuredNav =
     Array.isArray(templateConfig.navigation) &&
-    templateConfig.navigation.length > 0
+      templateConfig.navigation.length > 0
       ? templateConfig.navigation
       : buildDefaultNavigation();
 
@@ -1569,11 +1669,12 @@ function setupScrollSpy() {
     }
     currentActiveId = targetId;
 
+    const matched = targetMap.get(targetId);
     const isCaseCard =
       targetId.startsWith("upgrade-django4-case-") ||
       targetId.startsWith("case-") ||
       targetId.includes("-case-");
-    const itemName = matched.links[0]?.textContent?.trim() || targetId;
+    const itemName = matched?.links[0]?.textContent?.trim() || targetId;
 
     // Ensure analyticsSession has these sets defined
     analyticsSession.uniqueCaseViews =
@@ -1624,7 +1725,6 @@ function setupScrollSpy() {
     });
     clearActive();
 
-    const matched = targetMap.get(targetId);
     if (!matched) {
       return;
     }
@@ -2129,4 +2229,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   setupMermaidModal();
   setupScrollSpy();
+
+  // Initial hash handling
+  if (window.location.hash) {
+    revealHashTarget(window.location.hash, "initial_hash");
+  }
+
+  // Hash change listener
+  window.addEventListener("hashchange", () => {
+    revealHashTarget(window.location.hash, "hash_change");
+  });
 });

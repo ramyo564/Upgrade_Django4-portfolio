@@ -62,10 +62,14 @@ export const templateConfig = {
             id: 'upgrade-django4-cases',
             title: 'DJANGO_COMMERCE_TROUBLESHOOTING_CASES',
             navLabel: 'CASES',
-            sectionLead: '대표 3건을 먼저 보고, 필요할 때 전체 Case 1~6을 확장해 깊게 읽을 수 있도록 구성했습니다.',
+            sectionLead: '1분 요약페이지와 상세 아키텍처와 Git Repo로 요약 구성했습니다.',
             recruiterBrief: {
                 kicker: 'RECRUITER_QUICK_BRIEF',
-                title: '1분 요약으로 먼저 보는 핵심 변화',
+                title: '1분 요약으로 먼저 보는 핵심 변화 + 상세 아키텍처 + GITHUB_REPO',
+                actions: [
+                    { label: 'ARCHITECTURE_PAGE', href: 'https://ramyo564.github.io/Upgrade_Django4/', variant: 'primary' },
+                    { label: 'GITHUB_REPO', href: 'https://github.com/ramyo564/Upgrade_Django4', variant: 'secondary' }
+                ],
                 cases: [
                     {
                         id: 'Case 1',
@@ -73,7 +77,11 @@ export const templateConfig = {
                         title: '메일 인증 + 허니팟 보안 강화',
                         problem: '이메일 검증 없는 유령 계정 및 기본 /admin 경로 무차별 공격 노출',
                         action: '토큰 기반 비활성 계정 활성화 및 관리자 honeypot 라우팅 적용',
-                        impact: '가입 계정 신뢰도 보장 및 관리자 공격 표면 최소화'
+                        impact: '가입 계정 신뢰도 보장 및 관리자 공격 표면 최소화',
+                        links: [
+                            { label: 'CODE_ACCOUNTS_VIEWS', href: 'https://github.com/ramyo564/Upgrade_Django4/blob/main/accounts/views.py' },
+                            { label: 'CODE_ROOT_URLS', href: 'https://github.com/ramyo564/Upgrade_Django4/blob/main/greatkart/urls.py' }
+                        ]
                     },
                     {
                         id: 'Case 2',
@@ -81,7 +89,11 @@ export const templateConfig = {
                         title: '세션 장바구니 로그인 병합',
                         problem: '비회원 상태의 장바구니 품목이 로그인 시 단절 및 중복 발생',
                         action: 'variation 단위 비교 병합 및 익명/회원 상태 제어 동기화',
-                        impact: '로그인 전후 쇼핑 흐름 유지 및 주문 정보 일관성 회복'
+                        impact: '로그인 전후 쇼핑 흐름 유지 및 주문 정보 일관성 회복',
+                        links: [
+                            { label: 'CODE_CARTS_VIEWS', href: 'https://github.com/ramyo564/Upgrade_Django4/blob/main/carts/views.py' },
+                            { label: 'CODE_LOGIN_MERGE', href: 'https://github.com/ramyo564/Upgrade_Django4/blob/main/accounts/views.py' }
+                        ]
                     },
                     {
                         id: 'Case 3',
@@ -89,7 +101,11 @@ export const templateConfig = {
                         title: '결제 수단 후처리 통합',
                         problem: 'PayPal/Kakao 채널별로 결제 전이 및 재고 차감 로직이 분산되어 누락 발생',
                         action: '주문 확정 후 장바구니 비우기 및 상태 전이를 공통 단계로 통일',
-                        impact: '결제 채널 확장 시 유지보수 용이 및 상태 불일치 리스크 제거'
+                        impact: '결제 채널 확장 시 유지보수 용이 및 상태 불일치 리스크 제거',
+                        links: [
+                            { label: 'CODE_ORDERS_VIEWS', href: 'https://github.com/ramyo564/Upgrade_Django4/blob/main/orders/views.py' },
+                            { label: 'CODE_ORDERS_MODELS', href: 'https://github.com/ramyo564/Upgrade_Django4/blob/main/orders/models.py' }
+                        ]
                     },
                     {
                         id: 'Case 4',
@@ -97,7 +113,11 @@ export const templateConfig = {
                         title: '리뷰 권한과 점수 집계 모델화',
                         problem: '무작위 후기 및 평점 집계 분리로 사용자 노출 화면 데이터 왜곡',
                         action: '구매자/로그인 상태 기반 작성 차단 및 Product 모델 집계 쿼리 단일화',
-                        impact: '상품 평점의 신뢰도 상승 및 뷰 컨트롤러 연산 부담 감소'
+                        impact: '상품 평점의 신뢰도 상승 및 뷰 컨트롤러 연산 부담 감소',
+                        links: [
+                            { label: 'CODE_STORE_VIEWS', href: 'https://github.com/ramyo564/Upgrade_Django4/blob/main/store/views.py' },
+                            { label: 'CODE_STORE_MODELS', href: 'https://github.com/ramyo564/Upgrade_Django4/blob/main/store/models.py' }
+                        ]
                     },
                     {
                         id: 'Case 5',
@@ -105,7 +125,11 @@ export const templateConfig = {
                         title: '목록 검색/정렬/필터 고도화',
                         problem: '단일 상품 목록의 탐색 피로도 및 정렬 null 값 처리 부재로 혼란 가중',
                         action: '키워드/카테고리 복합 검색 유지 및 평점 정렬 Case/When 처리',
-                        impact: '복합 필터에서도 데이터 유지 달성 및 페이징 성능 개선'
+                        impact: '복합 필터에서도 데이터 유지 달성 및 페이징 성능 개선',
+                        links: [
+                            { label: 'CODE_STORE_VIEWS', href: 'https://github.com/ramyo564/Upgrade_Django4/blob/main/store/views.py' },
+                            { label: 'CODE_STORE_TEMPLATE', href: 'https://github.com/ramyo564/Upgrade_Django4/blob/main/templates/store/store.html' }
+                        ]
                     },
                     {
                         id: 'Case 6',
@@ -113,7 +137,11 @@ export const templateConfig = {
                         title: 'PostgreSQL 이관 및 AWS 배포',
                         problem: '로컬/운영 DB 차이 및 수동 환경 구성에 따른 서비스/배포 불안정',
                         action: 'RDS 분기 환경변수, dumpdata 데이터 이전, EB 배포 명령 고정',
-                        impact: '클라우드 환경 런타임 표준화 및 마이그레이션 자동화 루틴 정립'
+                        impact: '클라우드 환경 런타임 표준화 및 마이그레이션 자동화 루틴 정립',
+                        links: [
+                            { label: 'CODE_SETTINGS', href: 'https://github.com/ramyo564/Upgrade_Django4/blob/main/greatkart/settings.py' },
+                            { label: 'CODE_EB_CONFIG', href: 'https://github.com/ramyo564/Upgrade_Django4/blob/main/.ebextensions/django.config' }
+                        ]
                     }
                 ]
             },
@@ -312,6 +340,8 @@ export const templateConfig = {
         panelUid: 'ID: DJANGO-COMMERCE-COMMS',
         description: 'Django Commerce 포트폴리오 관련 문의는 아래 채널로 부탁드립니다.',
         actions: [
+            { label: 'ARCHITECTURE_DEEP_DIVE', href: 'https://ramyo564.github.io/Upgrade_Django4/', variant: 'primary' },
+            { label: 'PORTFOLIO_HUB', href: 'https://ramyo564.github.io/Portfolio/', variant: 'ghost' },
             { label: 'EMAIL', href: 'mailto:yohan032yohan@gmail.com' },
             { label: 'GITHUB', href: 'https://github.com/ramyo564/Upgrade_Django4' },
             { label: 'README', href: 'https://github.com/ramyo564/Upgrade_Django4/blob/main/README.md' }
